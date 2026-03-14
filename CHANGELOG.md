@@ -45,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configurable plugin registry URL via `defaults write com.TablePro com.TablePro.customRegistryURL <url>` for enterprise/private registries
 - SQL import options (wrap in transaction, disable FK checks) now persist across launches
 - `needsRestart` banner persists across app quit/relaunch after plugin uninstall
-- Copy as INSERT/UPDATE SQL statements from data grid context menu
+- Copy as INSERT/UPDATE SQL statements, CSV, and JSON from data grid context menu
 - Configurable font family and size for data grid (Settings > Data Grid > Font)
 - Plugin download count display in Browse Plugins — fetched from GitHub Releases API and cached for 1 hour
 - MSSQL query cancellation (`cancelQuery`) and lock timeout (`applyQueryTimeout`) support
