@@ -106,6 +106,25 @@ struct SidebarContextMenu: View {
             .disabled(isReadOnly)
         }
 
+        if let dbType = AppState.shared.currentDatabaseType,
+           PluginManager.shared.editorLanguage(for: dbType) == .sql,
+           let tableName = clickedTable?.name {
+            Menu("Generate SQL") {
+                Button("SELECT") {
+                    coordinator?.generateSQLTemplate(tableName: tableName, type: .select)
+                }
+                Button("INSERT") {
+                    coordinator?.generateSQLTemplate(tableName: tableName, type: .insert)
+                }
+                Button("UPDATE") {
+                    coordinator?.generateSQLTemplate(tableName: tableName, type: .update)
+                }
+                Button("DELETE") {
+                    coordinator?.generateSQLTemplate(tableName: tableName, type: .delete)
+                }
+            }
+        }
+
         Divider()
 
         if !isView {
