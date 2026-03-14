@@ -161,6 +161,8 @@ struct MainContentView: View {
                     coordinator.handleQuickSwitcherSelection(item)
                 }
             )
+        case .sqlPreview(let statements):
+            SQLReviewPopover(statements: statements, databaseType: connection.type)
         }
     }
 

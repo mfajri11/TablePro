@@ -62,23 +62,32 @@ final class TableRowViewWithMenu: NSTableRowView {
             copyAsMenu.addItem(copyWithHeadersItem)
 
             if let dbType = coordinator.databaseType,
-               dbType != .mongodb && dbType != .redis,
                coordinator.tableName != nil {
                 copyAsMenu.addItem(NSMenuItem.separator())
 
-                let insertItem = NSMenuItem(
-                    title: String(localized: "INSERT Statement(s)"),
-                    action: #selector(copyAsInsert),
-                    keyEquivalent: "")
-                insertItem.target = self
-                copyAsMenu.addItem(insertItem)
+                if dbType != .mongodb && dbType != .redis {
+                    let insertItem = NSMenuItem(
+                        title: String(localized: "SQL"),
+                        action: #selector(copyAsInsert),
+                        keyEquivalent: "")
+                    insertItem.target = self
+                    copyAsMenu.addItem(insertItem)
+ 
+                }
 
-                let updateItem = NSMenuItem(
-                    title: String(localized: "UPDATE Statement(s)"),
-                    action: #selector(copyAsUpdate),
+                let csvItem = NSMenuItem(
+                    title: String(localized: "CSV"),
+                    action: #selector(copyAsCSV),
                     keyEquivalent: "")
-                updateItem.target = self
-                copyAsMenu.addItem(updateItem)
+                csvItem.target = self
+                copyAsMenu.addItem(csvItem)
+
+                let jsonItem = NSMenuItem(
+                    title: String(localized: "JSON"),
+                    action: #selector(copyAsJSON),
+                    keyEquivalent: "")
+                jsonItem.target = self
+                copyAsMenu.addItem(jsonItem)
             }
 
             let copyAsItem = NSMenuItem(title: String(localized: "Copy as"), action: nil, keyEquivalent: "")
@@ -233,11 +242,20 @@ final class TableRowViewWithMenu: NSTableRowView {
         coordinator.copyRowsAsInsert(at: indices)
     }
 
-    @objc private func copyAsUpdate() {
+
+    @objc private func copyAsCSV() {
         guard let coordinator else { return }
         let indices: Set<Int> = !coordinator.selectedRowIndices.isEmpty
             ? coordinator.selectedRowIndices
             : [rowIndex]
-        coordinator.copyRowsAsUpdate(at: indices)
+        coordinator.copyRowsAsCSV(at: indices)
+    }
+
+    @objc private func copyAsJSON() {
+        guard let coordinator else { return }
+        let indices: Set<Int> = !coordinator.selectedRowIndices.isEmpty
+            ? coordinator.selectedRowIndices
+            : [rowIndex]
+        coordinator.copyRowsAsJSON(at: indices)
     }
 }

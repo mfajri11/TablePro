@@ -119,20 +119,19 @@ extension TableViewCoordinator {
         ClipboardService.shared.writeText(converter.generateInserts(rows: rows))
     }
 
-    func copyRowsAsUpdate(at indices: Set<Int>) {
-        guard let tableName, let databaseType else { return }
-        let driver = resolveDriver()
-        let converter = SQLRowToStatementConverter(
-            tableName: tableName,
-            columns: rowProvider.columns,
-            primaryKeyColumn: primaryKeyColumn,
-            databaseType: databaseType,
-            quoteIdentifier: driver?.quoteIdentifier,
-            escapeStringLiteral: driver?.escapeStringLiteral
-        )
+
+    func copyRowsAsCSV(at indices: Set<Int>) {
         let rows = indices.sorted().compactMap { rowProvider.rowValues(at: $0) }
         guard !rows.isEmpty else { return }
-        ClipboardService.shared.writeText(converter.generateUpdates(rows: rows))
+        let text = RowDataExporter.export(columns: rowProvider.columns, rows: rows, format: .csv)
+        ClipboardService.shared.writeText(text)
+    }
+
+    func copyRowsAsJSON(at indices: Set<Int>) {
+        let rows = indices.sorted().compactMap { rowProvider.rowValues(at: $0) }
+        guard !rows.isEmpty else { return }
+        let text = RowDataExporter.export(columns: rowProvider.columns, rows: rows, format: .json)
+        ClipboardService.shared.writeText(text)
     }
 
     private func resolveDriver() -> (any DatabaseDriver)? {
